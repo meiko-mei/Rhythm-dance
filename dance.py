@@ -61,6 +61,10 @@ player_name=''
 
 current_state = MENU
 def draw_menu():
+    global current_state
+
+    current_state = MENU
+
     screen.clear()
     screen.blit("stage.png", (0, 0))
     screen.draw.text("RHYTHM ON!", color="black", topleft=(CENTER_X - 150, 150), fontsize=40)
@@ -69,22 +73,21 @@ def draw_menu():
 def draw():
     if current_state == MENU:
         draw_menu()
+        screen.draw.text("Show High Scores", color="black", topleft=(CENTER_X - 100, 400), fontsize=30)
     elif current_state == PLAYING:
         draw_playing()
     elif current_state == GAME_OVER:
         draw_game_over()
-    elif current_screen == HIGH_SCORES:
+    elif current_state == HIGH_SCORES:
         draw_high_scores()
-
-    screen.draw.text("Show High Scores", color="black", topleft=(CENTER_X - 100, 400), fontsize=30)
-
     if show_highscores:
         draw_high_scores()
 
 def draw_playing():
-    global game_over, score, say_dance
+    global game_over, score, say_dance, current_state 
     global count, show_countdown
-
+    current_state = 1
+    
     if not game_over:
         screen.clear()
         screen.blit("stage.png", (0, 0))
@@ -106,7 +109,8 @@ def draw_playing():
 
 
 def draw_game_over():
-    global score, player_name, score_recorded, show_highscores
+    global score, player_name, score_recorded, show_highscores, current_state
+    current_state = GAME_OVER
 
     screen.clear()
     screen.blit("stage", (0, 0))
@@ -127,6 +131,9 @@ def draw_game_over():
     screen.draw.text("Show High Scores", color="black", topleft=(CENTER_X - 100, 400), fontsize=30)
     if show_highscores:
         draw_high_scores()
+    
+    if key == keys.ESCAPE and current_state == GAME_OVER:
+        current_state = MENU
     
 
 def draw_high_scores():
@@ -154,6 +161,7 @@ def draw_high_scores():
         screen.draw.text(player_name, color="black", topleft=(CENTER_X - 100, y_position), fontsize=20)
         screen.draw.text(str(player_score), color="black", topleft=(CENTER_X + 50, y_position), fontsize=20)
         y_position += 30  # Adjust the Y increment as needed
+        
 
 def on_mouse_down(pos, button):
     global show_highscores
@@ -165,6 +173,7 @@ def on_mouse_down(pos, button):
 
 def on_key_down(key):
     global current_state
+
     if key == keys.SPACE and current_state == MENU:
         current_state = PLAYING
         generate_moves()
