@@ -61,19 +61,17 @@ player_name=''
 
 current_state = MENU
 def draw_menu():
-    global current_state
-
-    current_state = MENU
 
     screen.clear()
     screen.blit("stage.png", (0, 0))
-    screen.draw.text("RHYTHM ON!", color="black", topleft=(CENTER_X - 150, 150), fontsize=40)
-    screen.draw.text("Press SPACE to start", color="black", topleft=(CENTER_X - 100, 300), fontsize=30)
-
+    screen.draw.text("RHYTHM ON!", color="black", topleft=(CENTER_X - 150, 150), fontsize=75)
+    screen.draw.text("Press SPACE to start", color="black", topleft=(CENTER_X - 100, 250), fontsize=30)
+    
 def draw():
     if current_state == MENU:
         draw_menu()
-        screen.draw.text("Show High Scores", color="black", topleft=(CENTER_X - 100, 400), fontsize=30)
+        screen.draw.filled_rect(Rect(CENTER_X - 95, 390, 190, 40), "white")
+        screen.draw.text("Show High Scores", color="black", topleft=(CENTER_X - 90, 400), fontsize=30)
     elif current_state == PLAYING:
         draw_playing()
     elif current_state == GAME_OVER:
@@ -84,9 +82,8 @@ def draw():
         draw_high_scores()
 
 def draw_playing():
-    global game_over, score, say_dance, current_state 
+    global game_over, score, say_dance
     global count, show_countdown
-    current_state = 1
     
     if not game_over:
         screen.clear()
@@ -106,7 +103,6 @@ def draw_playing():
 
     else:
         draw_game_over()
-
 
 def draw_game_over():
     global score, player_name, score_recorded, show_highscores, current_state
@@ -130,17 +126,19 @@ def draw_game_over():
 
     screen.draw.text("Show High Scores", color="black", topleft=(CENTER_X - 100, 400), fontsize=30)
     if show_highscores:
-        draw_high_scores()
-    
-    if key == keys.ESCAPE and current_state == GAME_OVER:
-        current_state = MENU
-    
+        draw_high_scores()   
 
 def draw_high_scores():
     global db_cursor
 
     screen.clear()
     screen.blit("stage.png", (0, 0))
+
+    # Draw a white rectangle as the background for high scores
+    white_rect_width = 300
+    white_rect_height = 300
+    white_rect_pos = (CENTER_X - white_rect_width / 2, 20)
+    screen.draw.filled_rect(Rect(white_rect_pos, (white_rect_width, white_rect_height)), "white")
 
     screen.draw.text("High Scores", color="black", topleft=(CENTER_X - 80, 50), fontsize=40)
 
@@ -152,8 +150,8 @@ def draw_high_scores():
     y_position = 100  # Adjust the starting Y position as needed
 
     # Draw headers
-    screen.draw.text("Player Name", color="black", topleft=(CENTER_X - 100, y_position), fontsize=20)
-    screen.draw.text("High Score", color="black", topleft=(CENTER_X + 50, y_position), fontsize=20)
+    screen.draw.text("Player Name", color="black", topleft=(CENTER_X - 120, y_position), fontsize=20)
+    screen.draw.text("High Score", color="black", topleft=(CENTER_X +40, y_position), fontsize=20)
     y_position += 30
 
     for row in scores:
@@ -161,10 +159,10 @@ def draw_high_scores():
         screen.draw.text(player_name, color="black", topleft=(CENTER_X - 100, y_position), fontsize=20)
         screen.draw.text(str(player_score), color="black", topleft=(CENTER_X + 50, y_position), fontsize=20)
         y_position += 30  # Adjust the Y increment as needed
-        
 
+        
 def on_mouse_down(pos, button):
-    global show_highscores
+    global show_highscores, current_state
 
     # Check if the mouse click is within the area of the "Show High Scores" text
     if SHOW_HIGH_SCORES_TEXT_RECT.collidepoint(pos):
@@ -325,5 +323,5 @@ def update():
 def on_close():
     # Close the database connection when the game is closing
     db_conn.close()
-
+print(os.path.abspath('z'))
 pgzrun.go()
